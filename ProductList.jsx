@@ -1,6 +1,7 @@
-import React from "react";
+```jsx
+import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { addItem } from "../redux/CartSlice";
+import { addItem } from "./CartSlice";
 
 const plants = [
   {
@@ -8,6 +9,7 @@ const plants = [
     name: "Snake Plant",
     price: 15,
     category: "Indoor Plants",
+    description: "Low-maintenance indoor plant.",
     image: "https://images.unsplash.com/photo-1593691509543-c55fb32f0cfd"
   },
   {
@@ -15,6 +17,7 @@ const plants = [
     name: "Aloe Vera",
     price: 10,
     category: "Indoor Plants",
+    description: "Medicinal succulent plant.",
     image: "https://images.unsplash.com/photo-1501004318641-b39e6451bec6"
   },
   {
@@ -22,6 +25,7 @@ const plants = [
     name: "Rose",
     price: 20,
     category: "Flowering Plants",
+    description: "Beautiful flowering plant.",
     image: "https://images.unsplash.com/photo-1518709268805-4e9042af2176"
   },
   {
@@ -29,6 +33,7 @@ const plants = [
     name: "Jasmine",
     price: 18,
     category: "Flowering Plants",
+    description: "Fragrant flowering plant.",
     image: "https://images.unsplash.com/photo-1468327768560-75b778cbb551"
   },
   {
@@ -36,6 +41,7 @@ const plants = [
     name: "Cactus",
     price: 12,
     category: "Succulents",
+    description: "Drought-resistant succulent.",
     image: "https://images.unsplash.com/photo-1459156212016-c812468e2115"
   },
   {
@@ -43,14 +49,25 @@ const plants = [
     name: "Echeveria",
     price: 14,
     category: "Succulents",
+    description: "Decorative rosette succulent.",
     image: "https://images.unsplash.com/photo-1459411552884-841db9b3cc2a"
   }
 ];
 
 function ProductList() {
   const dispatch = useDispatch();
+  const [addedItems, setAddedItems] = useState({});
 
-  const categories = [...new Set(plants.map((plant) => plant.category))];
+  const categories = [...new Set(plants.map((p) => p.category))];
+
+  const handleAddToCart = (plant) => {
+    dispatch(addItem(plant));
+
+    setAddedItems({
+      ...addedItems,
+      [plant.id]: true
+    });
+  };
 
   return (
     <div className="product-container">
@@ -65,16 +82,26 @@ function ProductList() {
               .filter((plant) => plant.category === category)
               .map((plant) => (
                 <div className="product-card" key={plant.id}>
-                  <img src={plant.image} alt={plant.name} />
+                  <img
+                    src={plant.image}
+                    alt={plant.name}
+                  />
 
                   <h3>{plant.name}</h3>
 
-                  <p>${plant.price}</p>
+                  <p>{plant.description}</p>
+
+                  <p>Price: ${plant.price}</p>
 
                   <button
-                    onClick={() => dispatch(addItem(plant))}
+                    disabled={addedItems[plant.id]}
+                    onClick={() =>
+                      handleAddToCart(plant)
+                    }
                   >
-                    Add to Cart
+                    {addedItems[plant.id]
+                      ? "Added"
+                      : "Add to Cart"}
                   </button>
                 </div>
               ))}
@@ -86,3 +113,4 @@ function ProductList() {
 }
 
 export default ProductList;
+```
