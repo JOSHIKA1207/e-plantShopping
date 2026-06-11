@@ -1,23 +1,34 @@
 import React, { useState } from "react";
-import AboutUs from "./components/AboutUs";
-import ProductList from "./components/ProductList";
+import ProductList from "./ProductList";
 import "./App.css";
 
 function App() {
   const [showProducts, setShowProducts] = useState(false);
 
-  const handleContinueShopping = () => {
+  const handleGetStarted = () => {
     setShowProducts(true);
   };
 
   return (
-    <div className="App">
-      <nav className="navbar">
-        <h2>e-PlantShopping 🌱</h2>
-      </nav>
-
+    <div>
       {!showProducts ? (
-        <AboutUs onContinueShopping={handleContinueShopping} />
+        <div className="background-image">
+          <div className="landing-content">
+            <h1>Welcome to Paradise Nursery</h1>
+
+            <p>
+              Paradise Nursery offers a wide variety of beautiful indoor and
+              outdoor plants to brighten your home and workspace.
+            </p>
+
+            <button
+              className="get-started-btn"
+              onClick={handleGetStarted}
+            >
+              Get Started
+            </button>
+          </div>
+        </div>
       ) : (
         <ProductList />
       )}
