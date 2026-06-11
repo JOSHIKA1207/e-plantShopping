@@ -1,9 +1,7 @@
+```jsx
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  removeItem,
-  updateQuantity,
-} from "../redux/CartSlice";
+import { removeItem, updateQuantity } from "./CartSlice";
 
 function CartItem() {
   const dispatch = useDispatch();
@@ -19,18 +17,24 @@ function CartItem() {
   };
 
   const handleDecrease = (item) => {
-    dispatch(
-      updateQuantity({
-        id: item.id,
-        quantity: item.quantity - 1,
-      })
-    );
+    if (item.quantity === 1) {
+      dispatch(removeItem(item.id));
+    } else {
+      dispatch(
+        updateQuantity({
+          id: item.id,
+          quantity: item.quantity - 1,
+        })
+      );
+    }
   };
 
-  const totalCost = cartItems.reduce(
-    (total, item) => total + item.price * item.quantity,
-    0
-  );
+  const calculateTotalAmount = () => {
+    return cartItems.reduce(
+      (total, item) => total + item.price * item.quantity,
+      0
+    );
+  };
 
   return (
     <div className="cart-container">
@@ -50,7 +54,14 @@ function CartItem() {
 
               <div className="cart-info">
                 <h3>{item.name}</h3>
-                <p>Price: ${item.price}</p>
+
+                <p>Unit Price: ${item.price}</p>
+
+                <p>
+                  Total Cost: $
+                  {(item.price * item.quantity).toFixed(2)}
+                </p>
+
                 <p>Quantity: {item.quantity}</p>
 
                 <div className="quantity-controls">
@@ -80,7 +91,10 @@ function CartItem() {
           ))}
 
           <div className="total-section">
-            <h2>Total Cost: ${totalCost.toFixed(2)}</h2>
+            <h2>
+              Total Cart Amount: $
+              {calculateTotalAmount().toFixed(2)}
+            </h2>
 
             <button
               className="shopping-btn"
@@ -93,7 +107,9 @@ function CartItem() {
 
             <button
               className="checkout-btn"
-              onClick={() => alert("Checkout")}
+              onClick={() =>
+                alert("Coming Soon")
+              }
             >
               Checkout
             </button>
@@ -105,3 +121,4 @@ function CartItem() {
 }
 
 export default CartItem;
+```
